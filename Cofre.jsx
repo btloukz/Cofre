@@ -21,7 +21,12 @@ export default function Cofre(props){
     }
 
     function abrir(){
-        
+        let errado = digitos.find(numDigito=>numDigito.valorDigitado!=numDigito.valorCorreto)
+        if(errado){
+            alert("Errou!")
+        } else {
+            alert("Cofre aberto!")
+        }
     }
 
     return <span style={{color:"brown", fontSize:"40px"}}>
