@@ -1,28 +1,29 @@
 import {useState} from 'react'
-import adicionar from './assets/adicionar.png'
-import remover from './assets/remover.png'
-import proibido from './assets/proibido.png'
 
 export default function Tecla(props){
-    const [valor, setValor] = useState(0);
+    const [valor, setValor] = useState(0)
 
     function aumentar(){
-        let novoValor=valor;
+        let novoValor=valor
         novoValor+=1
+        if(novoValor>9)
+            novoValor = 0
         setValor(novoValor)
-        props.onChange(novoValor)
+        props.onChange(novoValor) 
     }
 
     function diminuir(){
-        let novoValor=valor;
+        let novoValor=valor
         novoValor-=1
+        if(novoValor<0)
+            novoValor = 9
         setValor(novoValor)
         props.onChange(novoValor)
     }
-    
+
     return <>
-       {valor>0?<img onClick={diminuir} src={remover}/>:<img src={proibido}/>}
-       {valor} 
-       {valor<9?<img onClick={aumentar} src={adicionar}/>:<img src={proibido}/>}
+        <button onClick={diminuir}>-</button>
+        {valor}
+        <button onClick={aumentar}>+</button>
     </>
 }
