@@ -2,35 +2,47 @@ import {useState} from 'react'
 import Tecla from './Tecla'
 
 export default function Cofre(props){
-    const estadoInicial = props.senha.split("").map((valor,indice)=>({id:indice+1, valorDigitado:0, valorCorreto:Number(valor)}))
+    const estadoSenha = props.senha.split("").map((valor, indice)=>({position: indice+1, valorDigitado:0, valorCorreto:Number(valor)}))
 
-    const [digitos, setDigitos] = useState(estadoInicial)
-    
-    function atualizaDigito(valor, id){
-        let novosDigitos;
-        novosDigitos = digitos.map(digito=>{
-            if(digito.id==id) {
-                let novoDigito = {...digito}
-                novoDigito.valorDigitado=valor;
-                return novoDigito
+    const [senha, setSenha] = useState(estadoSenha)
+    const [texto, setTexto] = useState("")
+    const [tentativas, setTentativas] = useState(3)
+    const [final, setFinal] = useState("")
+
+    function novoValorDigitado(valor, posicao){
+        let novoArraySenha = senha.map(digito=>{
+            if(digito.position==posicao){
+                let novoObjetoDigito = {...digito}
+                novoObjetoDigito.valorDigitado=valor
+                return novoObjetoDigito
             } else {
-                return digito;
+                return digito
             }
         })
-        setDigitos(novosDigitos)
+        setSenha(novoArraySenha)
     }
 
-    function abrir(){
-        let errado = digitos.find(numDigito=>numDigito.valorDigitado!=numDigito.valorCorreto)
-        if(errado){
-            alert("Errou!")
+    function clicar(){
+        let certo = senha.filter((digito)=>digito.valorDigitado!==digito.valorCorreto)
+        if(certo){
+            setTexto("Errado!")
+            setTentativas(tentativas-1)
         } else {
-            alert("Cofre aberto!")
+            setTexto("Cofre aberto!")
+            setFinal("Valor no Cofre: R$350,00")
         }
     }
 
-    return <span style={{color:"brown", fontSize:"40px"}}>
-        {digitos.map(digito=><Tecla onChange={(valor)=>atualizaDigito(valor, digito.id)}/>)}
-            <button onClick={abrir}>Abrir</button>
+
+    return <span style={{fontSize:"30px"}}>
+        {senha.map(novaTecla=><Tecla onChange={(valor)=>novoValorDigitado(valor, novaTecla.position)}/>)}
+        <button disabled={tentativas==0} onClick={clicar}>Abrir</button>
+        <br/>
+        {texto}
+        <br/>
+        {final}
+        <br/>
+        <h3>Tentativas: {tentativas}</h3>
+        {tentativas == 0 && <h4>Acabaram suas chances...</h4>}
     </span>
 }
